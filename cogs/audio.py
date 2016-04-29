@@ -697,7 +697,7 @@ class Audio:
                         await self.bot.join_voice_channel(author.voice_channel)
                         return True
                     else:
-                        await self.bot.say("I need permissions to join that voice channel.")
+                        await self.bot.say("您所在的頻道不能放音樂，請切換至「小馬音樂台」.")
                         return False
                 else:
                     await self.bot.say("You need to be in a voice channel.")
@@ -713,10 +713,10 @@ class Audio:
                 await self.bot.join_voice_channel(author.voice_channel)
                 return True
             else:
-                await self.bot.say("I need permissions to join that voice channel.")
+                await self.bot.say("您所在的頻道不能放音樂，請切換至「小馬音樂台」.")
                 return False
         else:
-            await self.bot.say("You need to be in a voice channel.")
+            await self.bot.say("你必須先加入一個語音頻道.")
             return False
 
     async def queue_manager(self):
