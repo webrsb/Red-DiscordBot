@@ -93,14 +93,14 @@ class Audio:
                 else:
                     self.playlist = []
                     self.current = -1
-                    if not self.queue: await self.bot.say("The link has been put into queue.")
+                    if not self.queue: await self.bot.say("這個連結已加入佇列.")
                     self.queue.append(link)
             else:
                 await self.bot.say("You need to add a link or search terms.")
 
     @commands.command(aliases=["title"])
     async def song(self):
-        """Shows song title
+        """顯示歌名
         """
         if self.downloader["TITLE"] and "localtracks" not in self.downloader["TITLE"]:
             url = ""
@@ -111,13 +111,13 @@ class Audio:
 
     @commands.command(name="playlist", pass_context=True, no_pm=True)
     async def _playlist(self, ctx, name : str): #some checks here
-        """Plays saved playlist
+        """播放已儲存的播放清單
         """
         await self.start_playlist(ctx, name, random=False)
 
     @commands.command(pass_context=True, no_pm=True)
     async def mix(self, ctx, name : str): #some checks here
-        """Plays saved playlist (shuffled)
+        """播放已儲存的播放清單 (隨機播放)
         """
         await self.start_playlist(ctx, name, random=True)
 
@@ -140,7 +140,7 @@ class Audio:
 
     @commands.command(pass_context=True, aliases=["next"], no_pm=True)
     async def skip(self, ctx):
-        """Skips song
+        """跳過歌曲
         """
         msg = ctx.message
         if self.music_player.is_playing():
@@ -182,7 +182,7 @@ class Audio:
 
     @commands.command(pass_context=True, no_pm=True)
     async def local(self, ctx, name : str):
-        """Plays a local playlist
+        """播放本地的播放清單
 
         For bot's owner:
         http://twentysix26.github.io/Red-Docs/red_audio/"""
@@ -215,11 +215,11 @@ class Audio:
 
     @commands.command(pass_context=True, no_pm=True)
     async def sfx(self, ctx, *, name : str):
-        """Plays a local sound file
+        """播放本地的音樂檔
 
-        For bot's owner:
-        audio files must be placed in the data/audio/sfx folder.
-        Supported files are mp3, flac, wav"""
+        給bot的擁有者:
+        音樂檔必須放置在data/audio/sfx 資料夾.
+        支持的檔案類型為mp3, flac, wav"""
         #sound effects default enabled
         server = ctx.message.server
         if server.id not in self.settings["SERVER_SFX_ON"]:
@@ -279,7 +279,7 @@ class Audio:
 
     @commands.command(pass_context=True, no_pm=True)
     async def loop(self, ctx):
-        """Loops single song
+        """重播單一歌曲
         """
         msg = ctx.message
         if self.music_player.is_playing():
@@ -289,13 +289,13 @@ class Audio:
                     self.playlist = [self.downloader["URL"]]
                 else: # local
                     self.playlist = [self.downloader["ID"]]
-                await self.bot.say("I will play this song on repeat.")
+                await self.bot.say("我會持續重播這首歌.")
             else:
                 await self.bot.say("I'm in queue mode. Controls are disabled if you're in a room with multiple people.")
 
     @commands.command(pass_context=True, no_pm=True)
     async def shuffle(self, ctx):
-        """Shuffle playlist
+        """播放清單隨機播放
         """
         msg = ctx.message
         if self.music_player.is_playing():
@@ -308,7 +308,7 @@ class Audio:
 
     @commands.command(pass_context=True, aliases=["previous"], no_pm=True) #TODO, PLAYLISTS
     async def prev(self, ctx):
-        """Previous song
+        """上一首歌
         """
         msg = ctx.message
         if self.music_player.is_playing() and self.playlist:
@@ -325,7 +325,7 @@ class Audio:
 
     @commands.command(pass_context=True, no_pm=True)
     async def stop(self, ctx):
-        """Stops audio activity
+        """停止音訊活動
         """
         msg = ctx.message
         if self.music_player.is_playing() or self.sfx_player.is_playing():
@@ -347,9 +347,9 @@ class Audio:
 
     @commands.command(name="queue", pass_context=True, no_pm=True) #check that author is in the same channel as the bot
     async def _queue(self, ctx, *link : str):
-        """Add links or search terms to queue
+        """增加一個連結或搜尋結果加入播放佇列
 
-        Shows queue list if no links are provided.
+        如果沒有連結會直接顯示佇列清單.
         """
         if link == ():
             queue_list = await self.queue_titles()
@@ -395,7 +395,7 @@ class Audio:
 
     @commands.command(name="sing", pass_context=True, no_pm=True)
     async def _sing(self, ctx):
-        """Makes Red sing"""
+        """讓機器人唱首歌"""
         if self.downloader["DOWNLOADING"]:
             await self.bot.say("I'm already downloading a track.")
             return
@@ -413,7 +413,7 @@ class Audio:
 
     @commands.command()
     async def pause(self):
-        """Pauses the current song"""
+        """暫停目前的歌曲"""
         if self.music_player.is_playing():
             self.music_player.paused = True
             self.music_player.pause()
@@ -421,7 +421,7 @@ class Audio:
             
     @commands.command()
     async def resume(self):
-        """Resumes paused song."""
+        """繼續播放."""
         if self.sfx_player.is_playing():
             self.sfx_player.stop()
         elif not self.music_player.is_playing():
@@ -431,7 +431,7 @@ class Audio:
 
     @commands.group(name="list", pass_context=True)
     async def _list(self, ctx):
-        """Lists playlists"""
+        """列出播放清單"""
         if ctx.invoked_subcommand is None:
             await send_cmd_help(ctx)
 

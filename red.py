@@ -20,7 +20,7 @@ import traceback
 #
 
 description = """
-Red - A multifunction Discord bot by Twentysix
+Red - 多功能 Discord 機器人 作者：Twentysix
 """
 
 formatter = commands.HelpFormatter(show_check_failure=False)
@@ -40,12 +40,12 @@ async def on_ready():
     channels = str(len([c for c in bot.get_all_channels()]))
     bot.uptime = int(time.perf_counter())
     print('------')
-    print(bot.user.name + " is now online.")
+    print(bot.user.name + " 已上線.")
     print('------')
-    print("Connected to:")
-    print(servers + " servers")
-    print(channels + " channels")
-    print(users + " users")
+    print("連線至:")
+    print(servers + " 個伺服")
+    print(channels + " 個頻道")
+    print(users + " 使用者")
     print("\n{0} active cogs with {1} commands\n".format(
         str(len(bot.cogs)), str(len(bot.commands))))
     if settings.login_type == "token":
