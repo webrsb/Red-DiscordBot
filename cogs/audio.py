@@ -66,7 +66,7 @@ class Audio:
 
     @commands.command(pass_context=True, no_pm=True)
     async def play(self, ctx, *link : str):
-        """Plays videos (links/search terms)
+        """播放音樂 (影片連結/搜尋關鍵字)
         """
         if self.downloader["DOWNLOADING"]:
             await self.bot.say("I'm already downloading a track.")
@@ -79,7 +79,7 @@ class Audio:
                     link = "[SEARCH:]" + link
                 else:
                     if not self.is_playlist_valid([link]):
-                        await self.bot.say("Invalid link.")
+                        await self.bot.say("無效的連結")
                         return
                 if await self.is_alone_or_admin(msg):
                     self.queue = []
@@ -89,7 +89,7 @@ class Audio:
                     self.music_player.paused = False
                     if not self.sfx_player.is_done(): self.sfx_player.stop()
                     if not self.music_player.is_done(): self.music_player.stop()
-                    await self.bot.say("Playing requested link...")
+                    await self.bot.say("正在播放請求的連結...")
                 else:
                     self.playlist = []
                     self.current = -1
@@ -518,7 +518,7 @@ class Audio:
     @commands.group(pass_context=True)
     @checks.mod_or_permissions(manage_roles=True)
     async def audioset(self, ctx):
-        """Changes audio module settings"""
+        """更改音訊模組設定"""
         if ctx.invoked_subcommand is None:
             server = ctx.message.server
             await send_cmd_help(ctx)
@@ -533,7 +533,7 @@ class Audio:
 
     @audioset.command(name="queue")
     async def queueset(self):
-        """Enables/disables forced queue"""
+        """啟用/停用 強制佇列"""
         self.settings["QUEUE_MODE"] = not self.settings["QUEUE_MODE"]
         if self.settings["QUEUE_MODE"]:
             await self.bot.say("Queue mode is now on.")
@@ -810,7 +810,7 @@ class Audio:
 
     @commands.command(pass_context=True, no_pm=True)
     async def delplaylist(self, ctx, name : str):
-        """Deletes playlist
+        """刪除播放清單
 
         Limited to owner, admins and author of the playlist."""
         file_path = "data/audio/playlists/" + name + ".txt"
