@@ -156,7 +156,7 @@ class Audio:
         v_channel = msg.server.me.voice_channel
         if msg.author.voice_channel.id == v_channel.id:
             if msg.author.id in self.skip_votes:
-                await self.bot.say("You already voted.")
+                await self.bot.say("你已經投過票了.")
                 return
             self.skip_votes.append(msg.author.id)
             if msg.server.me.id not in self.skip_votes: self.skip_votes.append(msg.server.me.id)
@@ -177,7 +177,7 @@ class Audio:
                 if self.music_player.is_playing(): self.music_player.stop()
                 self.skip_votes = []
                 return
-            await self.bot.say("You voted to skip. Votes: [{0}/{1}]".format(str(len(self.skip_votes)-1), str(votes_needed)))
+            await self.bot.say("你投跳過. 所需票數: [{0}/{1}]".format(str(len(self.skip_votes)-1), str(votes_needed)))
 
 
     @commands.command(pass_context=True, no_pm=True)
@@ -353,7 +353,7 @@ class Audio:
         """
         if link == ():
             queue_list = await self.queue_titles()
-            await self.bot.say("播放佇列: \n" + queue_list + "\n\nType queue <link> to add a link or search terms to the queue.")
+            await self.bot.say("播放佇列: \n" + queue_list + "\n\n輸入 !play [連結] 將要播放的影片加入佇列.")
         elif await self.check_voice(ctx.message.author, ctx.message):
             if not self.playlist:
                 link = " ".join(link)
