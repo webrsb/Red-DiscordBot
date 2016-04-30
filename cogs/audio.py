@@ -96,7 +96,7 @@ class Audio:
                     if not self.queue: await self.bot.say("這個連結已加入佇列.")
                     self.queue.append(link)
             else:
-                await self.bot.say("You need to add a link or search terms.")
+                await self.bot.say("你必須填寫要加入的連結或搜尋關鍵字.")
 
     @commands.command(aliases=["title"])
     async def song(self):
@@ -104,7 +104,7 @@ class Audio:
         """
         if self.downloader["TITLE"] and "localtracks" not in self.downloader["TITLE"]:
             url = ""
-            if self.downloader["URL"]: url = 'Link : "' + self.downloader["URL"] + '"'
+            if self.downloader["URL"]: url = '連結 : "' + self.downloader["URL"] + '"'
             await self.bot.say(self.downloader["TITLE"] + "\n" + url)
         else:
             await self.bot.say("No title available.")
@@ -332,7 +332,7 @@ class Audio:
             if await self.is_alone_or_admin(msg):
                 await self.close_audio()
             else:
-                await self.bot.say("You can't stop music when there are other people in the channel! Vote to skip instead.")
+                await self.bot.say("你不能在有其他成員在頻道裡時停止播放! 請用投票來跳過.")
         else:
             await self.close_audio()
 
@@ -353,7 +353,7 @@ class Audio:
         """
         if link == ():
             queue_list = await self.queue_titles()
-            await self.bot.say("Videos in queue: \n" + queue_list + "\n\nType queue <link> to add a link or search terms to the queue.")
+            await self.bot.say("播放佇列: \n" + queue_list + "\n\nType queue <link> to add a link or search terms to the queue.")
         elif await self.check_voice(ctx.message.author, ctx.message):
             if not self.playlist:
                 link = " ".join(link)
@@ -361,7 +361,7 @@ class Audio:
                     link = "[SEARCH:]" + link
                 else:
                     if not self.is_playlist_valid([link]):
-                        await self.bot.say("Invalid link.")
+                        await self.bot.say("無效的連結.")
                         return
                 self.queue.append(link)
                 msg = ctx.message
@@ -375,7 +375,7 @@ class Audio:
                     await self.bot.say("A song has been put into the queue by {}.".format(msg.author))
 
             else:
-                await self.bot.say("I'm already playing a playlist.")
+                await self.bot.say("我已經在播放一個播放清單了.")
 
     async def is_alone_or_admin(self, message): #Direct control. fix everything
         author = message.author
@@ -397,7 +397,7 @@ class Audio:
     async def _sing(self, ctx):
         """讓機器人唱首歌"""
         if self.downloader["DOWNLOADING"]:
-            await self.bot.say("I'm already downloading a track.")
+            await self.bot.say("我已經在下載這首歌了.")
             return
         msg = ctx.message
         if await self.check_voice(msg.author, msg):
@@ -417,7 +417,7 @@ class Audio:
         if self.music_player.is_playing():
             self.music_player.paused = True
             self.music_player.pause()
-            await self.bot.say("Song paused.")
+            await self.bot.say("歌曲暫停.")
             
     @commands.command()
     async def resume(self):
@@ -427,7 +427,7 @@ class Audio:
         elif not self.music_player.is_playing():
             self.music_player.paused = False
             self.music_player.resume()
-            await self.bot.say("Resuming song.")
+            await self.bot.say("繼續播放.")
 
     @commands.group(name="list", pass_context=True)
     async def _list(self, ctx):
@@ -449,11 +449,11 @@ class Audio:
             msg += "```"
             await self.bot.send_message(ctx.message.author, msg)
         else:
-            await self.bot.say("There are no playlists.")
+            await self.bot.say("沒有任何清單.")
 
     @_list.command(name="local", pass_context=True)
     async def list_local(self, ctx):
-        msg = "Available local playlists: \n\n```"
+        msg = "可用的本地播放清單: \n\n```"
         dirs = self.get_local_playlists()
         if dirs:
             for i, d in enumerate(dirs):
@@ -464,11 +464,11 @@ class Audio:
             msg += "```"
             await self.bot.send_message(ctx.message.author, msg)
         else:
-            await self.bot.say("There are no local playlists.")
+            await self.bot.say("沒有任何本地播放清單.")
 
     @_list.command(name="sfx", pass_context=True)
     async def list_sfx(self, ctx):
-        msgs = ["Available local sound effects: \n\n```\n"]
+        msgs = ["可用的音效: \n\n```\n"]
         files = self.get_local_sfx()
         m = 0
         maxm = 1980
@@ -488,12 +488,12 @@ class Audio:
                 await self.bot.send_message(ctx.message.author, msg)
                 await asyncio.sleep(1)
         else:
-            await self.bot.say("There are no local sound effects.")
+            await self.bot.say("沒有任何本地音效.")
 
     @_list.command(name="queue", pass_context=True)
     async def list_queue(self, ctx):
         queue_list = await self.queue_titles()
-        await self.bot.say("Videos in queue: \n" + queue_list)
+        await self.bot.say("播放佇列: \n" + queue_list)
 
     async def queue_titles(self):
         song_names = []
@@ -505,9 +505,9 @@ class Audio:
                     if result["title"] != []:
                         song_names.append(result["title"])
                     else:
-                        song_names.append("Could not get song title")
+                        song_names.append("無法取得歌曲名")
                 except:
-                    song_names.append("Could not get song title")
+                    song_names.append("無法取得歌曲名")
             song_list = "\n".join(["{}: {}".format(str(i+1), s) for i, s in enumerate(song_names)])
         elif self.music_player.is_playing():
             song_list = "1: {}".format(song_names[0])
@@ -536,9 +536,9 @@ class Audio:
         """啟用/停用 強制佇列"""
         self.settings["QUEUE_MODE"] = not self.settings["QUEUE_MODE"]
         if self.settings["QUEUE_MODE"]:
-            await self.bot.say("Queue mode is now on.")
+            await self.bot.say("佇列模式已開啟.")
         else:
-            await self.bot.say("Queue mode is now off.")
+            await self.bot.say("佇列模式已關閉.")
         fileIO("data/audio/settings.json", "save", self.settings)
 
     @audioset.command(name="status")
@@ -700,13 +700,13 @@ class Audio:
                         await self.bot.say("您所在的頻道不能放音樂，請切換至「小馬音樂台」.")
                         return False
                 else:
-                    await self.bot.say("You need to be in a voice channel.")
+                    await self.bot.say("你需要進入一個語音頻道.")
                     return False
             else:
                 if not self.playlist and not self.queue:
                     return True
                 else:
-                    await self.bot.say("I'm already playing music for other people.")
+                    await self.bot.say("我已經在為其他馬播音樂了.")
                     return False
         elif author.voice_channel:
             if author.voice_channel.permissions_for(message.server.me).connect:
@@ -750,7 +750,7 @@ class Audio:
             if v["duration"] > self.settings["MAX_LENGTH"]: raise MaximumLength("Track exceeded maximum length. See help audioset maxlength")
             if not os.path.isfile("data/audio/cache/" + v["id"]):
                 v = yt.extract_info(url, download=True)
-            audio.downloader = {"DONE" : True, "TITLE" : v["title"], "ID" : v["id"], "URL" : url, "DURATION" : v["duration"], "DOWNLOADING" : False} #Errors out here if invalid link
+            audio.downloader = {"DONE" : True, "TITLE" : v["title"], "ID" : v["id"], "URL" : url, "DURATION" : v["duration"], "DOWNLOADING" : False} #Errors out here if 無效的連結
         except Exception as e:
             print(e) # TODO
             audio.downloader = {"DONE" : True, "TITLE" : False, "ID" : False, "URL" : False, "DOWNLOADING" : False}
@@ -788,10 +788,10 @@ class Audio:
 
     @commands.command(pass_context=True, no_pm=True)
     async def addplaylist(self, ctx, name : str, link : str): #CHANGE COMMAND NAME
-        """Adds tracks from youtube / soundcloud playlist link"""
+        """從youtube / soundcloud 的播放清單增加連結"""
         if self.is_playlist_name_valid(name) and len(name) < 25:
             if fileIO("playlists/" + name + ".txt", "check"):
-                await self.bot.say("`A playlist with that name already exists.`")
+                await self.bot.say("`相同名稱的播放清單已存在.`")
                 return False
             if "youtube" in link.lower():
                 links = await self.parse_yt_playlist(link)
@@ -802,7 +802,7 @@ class Audio:
                          "playlist": links,
                          "link"    : link}
                 fileIO("data/audio/playlists/" + name + ".txt", "save", data)
-                await self.bot.say("Playlist added. Name: {}, songs: {}".format(name, str(len(links))))
+                await self.bot.say("播放清單已增加. 名稱: {}, 歌曲: {}".format(name, str(len(links))))
             else:
                 await self.bot.say("Something went wrong. Either the link was incorrect or I was unable to retrieve the page.")
         else:
@@ -812,7 +812,7 @@ class Audio:
     async def delplaylist(self, ctx, name : str):
         """刪除播放清單
 
-        Limited to owner, admins and author of the playlist."""
+        所有者、管理員、作者才能刪掉播放清單."""
         file_path = "data/audio/playlists/" + name + ".txt"
         author = ctx.message.author
         if fileIO(file_path, "check"):
@@ -824,7 +824,7 @@ class Audio:
             else:
                 await self.bot.say("Only owner, admins and the author of the playlist can delete it.")
         else:
-            await self.bot.say("There's no playlist with that name.")
+            await self.bot.say("沒有這個名字的播放清單.")
 
     async def admin_or_owner(self, message):
         if message.author.id == bot_settings.owner:
@@ -847,11 +847,11 @@ class Audio:
                              "playlist": data,
                              "link"    : False}
                     fileIO("data/audio/playlists/" + msg["filename"], "save", data)
-                    await self.bot.send_message(message.channel, "Playlist added. Name: {}".format(msg["filename"].replace(".txt", "")))
+                    await self.bot.send_message(message.channel, "播放清單已增加. 名稱: {}".format(msg["filename"].replace(".txt", "")))
                 else:
                     await self.bot.send_message(message.channel, "Something is wrong with the playlist or its filename.") # Add formatting info
             else:
-                await self.bot.send_message(message.channel, "A playlist with that name already exists. Change the filename and resubmit it.")
+                await self.bot.send_message(message.channel, "這個名稱的播放清單已存在，請換一個名稱再重新送出一次.")
 
     def is_playlist_valid(self, data):
         data = [y for y in data if y != ""] # removes all empty elements
