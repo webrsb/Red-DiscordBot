@@ -7,6 +7,7 @@ import os
 import time
 import sys
 import logging
+import logging.handlers
 import shutil
 import traceback
 
@@ -149,17 +150,11 @@ def check_folders():
 def check_configs():
     if settings.bot_settings == settings.default_settings:
         print("Red - First run configuration\n")
-        print("You either need a normal account or a bot account to use Red. "
-              "*Do not* use your own.")
-        print("For more information on bot accounts see: https://twentysix26."
-              "github.io/Red-Docs/red_guide_bot_accounts/"
+        print("If you haven't already, create a new account:\n"
+              "https://twentysix26.github.io/Red-Docs/red_guide_bot_accounts/"
               "#creating-a-new-bot-account")
-        print("If you decide to use a normal account, create an account for "
-              "your bot on https://discordapp.com then enter your email here.")
-        print("Otherwise make a bot account and copy the token from "
-              "https://discordapp.com/developers/applications/me then enter "
-              "your token here.")
-        print("\nType your email or token:")
+        print("and obtain your bot's token like described.")
+        print("\nInsert your bot's token:")
 
         choice = input("> ")
 
@@ -235,14 +230,24 @@ def set_logger():
     logger.addHandler(handler)
 
     logger = logging.getLogger("red")
-    logger.setLevel(logging.WARNING)
-    handler = logging.FileHandler(
-        filename='data/red/red.log', encoding='utf-8', mode='a')
-    handler.setFormatter(logging.Formatter(
+    logger.setLevel(logging.INFO)
+
+    red_format = logging.Formatter(
         '%(asctime)s %(levelname)s %(module)s %(funcName)s %(lineno)d: '
         '%(message)s',
-        datefmt="[%d/%m/%Y %H:%M]"))
-    logger.addHandler(handler)
+        datefmt="[%d/%m/%Y %H:%M]")
+
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    stdout_handler.setFormatter(red_format)
+    stdout_handler.setLevel(logging.INFO)
+
+    fhandler = logging.handlers.RotatingFileHandler(
+        filename='data/red/red.log', encoding='utf-8', mode='a',
+        maxBytes=10**7, backupCount=5)
+    fhandler.setFormatter(red_format)
+
+    logger.addHandler(fhandler)
+    logger.addHandler(stdout_handler)
 
 
 def get_answer():
